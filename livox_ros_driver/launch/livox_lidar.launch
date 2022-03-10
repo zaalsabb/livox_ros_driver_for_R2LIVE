@@ -14,7 +14,7 @@
 	<arg name="lidar_bag" default="true"/>
 	<arg name="imu_bag" default="true"/>
 	<arg name="enable_software_sync" default="false"/>
-	<arg name="multiply_g" default="false"/>
+	<arg name="multiply_g" default="true"/>
 
 	<param name="xfer_format" value="$(arg xfer_format)"/>
 	<param name="multi_topic" value="$(arg multi_topic)"/>
@@ -30,7 +30,6 @@
 	<param name="enable_software_sync" type="bool" value="$(arg enable_software_sync)"/>
 	<param name="multiply_g" type="bool" value="$(arg multiply_g)"/>
 
-	<node pkg="loam_horizon" type="livox_repub" name="livox_repub" output="screen" />
 	<node name="livox_lidar_publisher" pkg="livox_ros_driver"
 	      type="livox_ros_driver_node" required="true"
 	      output="screen" args="$(arg cmdline_arg)"/>
