@@ -100,7 +100,7 @@ int main(int argc, char **argv) {
 
   /** Lidar data distribute control and lidar data source set */
   Lddc *lddc = new Lddc(xfer_format, multi_topic, data_src, output_type,
-                        publish_freq, frame_id, lidar_bag, imu_bag);
+                        publish_freq, frame_id, lidar_bag, imu_bag, enable_software_sync);
   lddc->SetRosNode(&livox_node);
 
   int ret = 0;

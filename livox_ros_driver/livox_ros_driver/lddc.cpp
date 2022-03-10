@@ -50,7 +50,7 @@ namespace livox_ros
 
   /** Lidar Data Distribute Control--------------------------------------------*/
   Lddc::Lddc(int format, int multi_topic, int data_src, int output_type,
-             double frq, std::string &frame_id, bool lidar_bag, bool imu_bag)
+             double frq, std::string &frame_id, bool lidar_bag, bool imu_bag, bool enable_software_sync)
       : transfer_format_(format),
         use_multi_topic_(multi_topic),
         data_src_(data_src),
@@ -58,7 +58,8 @@ namespace livox_ros
         publish_frq_(frq),
         frame_id_(frame_id),
         enable_lidar_bag_(lidar_bag),
-        enable_imu_bag_(imu_bag)
+        enable_imu_bag_(imu_bag),
+        enable_software_sync_(enable_software_sync)
   {
     publish_period_ns_ = kNsPerSecond / publish_frq_;
     lds_ = nullptr;
@@ -560,7 +561,7 @@ namespace livox_ros
     // ANCHOR: Hack LiDAR time (software sync)
     // std::cout << "Point offsettime = " << packet_offset_time << std::endl;
     /**************** Modified for R2LIVE **********************/
-    if (enable_software_sync){
+    if (enable_software_sync_){
       livox_msg.header.stamp = ros::Time((timestamp - init_lidar_tim - packet_offset_time )  / 1e9 + init_ros_time);
     }
     /**************** Modified for R2LIVE **********************/
