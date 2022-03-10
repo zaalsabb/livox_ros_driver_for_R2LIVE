@@ -557,10 +557,12 @@ namespace livox_ros
       ++published_packet;
     }
 
-    // ANCHOR: Hack LiDAR time
+    // ANCHOR: Hack LiDAR time (software sync)
     // std::cout << "Point offsettime = " << packet_offset_time << std::endl;
     /**************** Modified for R2LIVE **********************/
-    livox_msg.header.stamp = ros::Time((timestamp - init_lidar_tim - packet_offset_time )  / 1e9 + init_ros_time);
+    if (enable_software_sync){
+      livox_msg.header.stamp = ros::Time((timestamp - init_lidar_tim - packet_offset_time )  / 1e9 + init_ros_time);
+    }
     /**************** Modified for R2LIVE **********************/
 
     ros::Publisher *p_publisher = Lddc::GetCurrentPublisher(handle);

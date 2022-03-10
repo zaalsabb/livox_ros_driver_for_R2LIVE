@@ -74,6 +74,9 @@ int main(int argc, char **argv) {
   std::string frame_id = "livox_frame";
   bool lidar_bag = true;
   bool imu_bag   = false;
+  /**************** Modified for R2LIVE **********************/
+  bool enable_software_sync   = false;
+  /**************** Modified for R2LIVE **********************/
 
   livox_node.getParam("xfer_format", xfer_format);
   livox_node.getParam("multi_topic", multi_topic);
@@ -83,6 +86,10 @@ int main(int argc, char **argv) {
   livox_node.getParam("frame_id", frame_id);
   livox_node.getParam("enable_lidar_bag", lidar_bag);
   livox_node.getParam("enable_imu_bag", imu_bag);
+  /**************** Modified for R2LIVE **********************/
+  livox_node.getParam("enable_software_sync", enable_software_sync);
+  /**************** Modified for R2LIVE **********************/
+
   if (publish_freq > 100.0) {
     publish_freq = 100.0;
   } else if (publish_freq < 0.1) {
