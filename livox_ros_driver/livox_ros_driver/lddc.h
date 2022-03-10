@@ -47,7 +47,7 @@ typedef enum {
 class Lddc {
  public:
   Lddc(int format, int multi_topic, int data_src, int output_type, double frq,
-      std::string &frame_id, bool lidar_bag, bool imu_bag, bool enable_software_sync);
+      std::string &frame_id, bool lidar_bag, bool imu_bag, bool enable_software_sync, bool multiply_g);
   ~Lddc();
 
   int RegisterLds(Lds *lds);
@@ -97,6 +97,7 @@ class Lddc {
   bool enable_lidar_bag_;
   bool enable_imu_bag_;
   bool enable_software_sync_;
+  bool multiply_g_;
   ros::Publisher *private_pub_[kMaxSourceLidar];
   ros::Publisher *global_pub_;
   ros::Publisher *private_imu_pub_[kMaxSourceLidar];

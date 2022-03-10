@@ -76,6 +76,7 @@ int main(int argc, char **argv) {
   bool imu_bag   = false;
   /**************** Modified for R2LIVE **********************/
   bool enable_software_sync   = false;
+  bool multiply_g   = false;
   /**************** Modified for R2LIVE **********************/
 
   livox_node.getParam("xfer_format", xfer_format);
@@ -88,6 +89,7 @@ int main(int argc, char **argv) {
   livox_node.getParam("enable_imu_bag", imu_bag);
   /**************** Modified for R2LIVE **********************/
   livox_node.getParam("enable_software_sync", enable_software_sync);
+  livox_node.getParam("multiply_g", multiply_g);
   /**************** Modified for R2LIVE **********************/
 
   if (publish_freq > 100.0) {
@@ -100,7 +102,7 @@ int main(int argc, char **argv) {
 
   /** Lidar data distribute control and lidar data source set */
   Lddc *lddc = new Lddc(xfer_format, multi_topic, data_src, output_type,
-                        publish_freq, frame_id, lidar_bag, imu_bag, enable_software_sync);
+                        publish_freq, frame_id, lidar_bag, imu_bag, enable_software_sync, multiply_g);
   lddc->SetRosNode(&livox_node);
 
   int ret = 0;

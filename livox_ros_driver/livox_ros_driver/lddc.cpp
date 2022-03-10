@@ -43,6 +43,7 @@ double g_ros_init_start_time = -3e8;
 double init_lidar_tim = 3e10;
 double init_ros_time = 0;
 double skip_frame = 100;
+double g_val = 9.805;
 /**************** Modified for R2LIVE **********************/
 
 namespace livox_ros
@@ -50,7 +51,7 @@ namespace livox_ros
 
   /** Lidar Data Distribute Control--------------------------------------------*/
   Lddc::Lddc(int format, int multi_topic, int data_src, int output_type,
-             double frq, std::string &frame_id, bool lidar_bag, bool imu_bag, bool enable_software_sync)
+             double frq, std::string &frame_id, bool lidar_bag, bool imu_bag, bool enable_software_sync, bool multiply_g)
       : transfer_format_(format),
         use_multi_topic_(multi_topic),
         data_src_(data_src),
@@ -59,7 +60,8 @@ namespace livox_ros
         frame_id_(frame_id),
         enable_lidar_bag_(lidar_bag),
         enable_imu_bag_(imu_bag),
-        enable_software_sync_(enable_software_sync)
+        enable_software_sync_(enable_software_sync),
+        multiply_g_(multiply_g)
   {
     publish_period_ns_ = kNsPerSecond / publish_frq_;
     lds_ = nullptr;
@@ -623,30 +625,31 @@ namespace livox_ros
     imu_data.linear_acceleration.z = imu->acc_z;
 
     /**************** Modified for R2LIVE **********************/
-    if (1)
+    // if (g_ros_init_start_time < 0 && timestamp >= 0)
+    if (skip_frame)
     {
-      // if (g_ros_init_start_time < 0 && timestamp >= 0)
-      if (skip_frame)
-      {
-        skip_frame--;
-        init_ros_time = ros::Time::now().toSec();
-        init_lidar_tim = timestamp;
-        g_ros_init_start_time = timestamp;
-        ROS_INFO("========================");
-        ROS_INFO("Init time stamp = %lf", g_ros_init_start_time);
-        ROS_INFO("========================");
-      }
-      // ANCHOR: Hack IMU time
+      skip_frame--;
+      init_ros_time = ros::Time::now().toSec();
+      init_lidar_tim = timestamp;
+      g_ros_init_start_time = timestamp;
+      ROS_INFO("========================");
+      ROS_INFO("Init time stamp = %lf", g_ros_init_start_time);
+      ROS_INFO("========================");
+    }
+    // ANCHOR: Hack IMU time
+    if (enable_software_sync_){
       imu_data.header.stamp = ros::Time((timestamp - init_lidar_tim) / 1e9 + init_ros_time);
       // std::cout << timestamp << " | " << (timestamp - init_lidar_tim)/1e9 << " | " << imu_data.header.stamp.toNSec() / 1e9 << " | " << ros::Time::now().toNSec() / 1e9  << std::endl;
       // printf("%lf | %lf | %lf \r\n", ros::Time::now().toSec(), imu_data.header.stamp.toSec(), (timestamp - init_lidar_tim) / 1e9);
       // std::cout << timestamp << " | " << g_ros_init_start_time << " | " << imu_data.header.stamp.toNSec() / 1e9 << " | " << ros::Time::now().toNSec() / 1e9  << std::endl;
-      double g_val = 9.805;
+    }
+
+    if (multiply_g_){
       imu_data.linear_acceleration.x *= g_val;
       imu_data.linear_acceleration.y *= g_val;
       imu_data.linear_acceleration.z *= g_val;
-      /**************** Modified for R2LIVE **********************/
     }
+    /**************** Modified for R2LIVE **********************/
 
     QueuePopUpdate(queue);
     ++published_packet;
