@@ -3,6 +3,8 @@ This is a modified livox_ros_driver for [R2LIVE](https://github.com/hku-mars/r2l
 1. Modified the timestamp of IMU topic and LiDAR topic from LiDAR base to operation system base.
 2. The value of IMU acceleration multiplies the amplitude (9.805 m/(s^2)) of gravity before publish.
 
+NOTE: Options (1) and (2) can be turned on and off using the launch argumments `enable_software_sync` and `multiply_g`, respectively.
+
 For more detail, please see [lddc.cpp](./livox_ros_driver/livox_ros_driver/lddc.cpp) line 41-46, 562-564, 622-645.
 
 livox_ros_driver is a new ROS package, specially used to connect LiDAR products produced by Livox. The driver can be run under ubuntu 14.04/16.04/18.04 operating system with ROS environment (indigo, kinetic, melodic) installed. Tested hardware platforms that can run livox_ros_driver include: Intel x86 cpu platforms, and some ARM64 hardware platforms (such as nvida TX2 / Xavier, etc.).
